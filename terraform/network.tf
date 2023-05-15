@@ -17,7 +17,7 @@ resource "aws_subnet" "keycloak" {
   cidr_block        = "10.100.${count.index}.0/24"
   availability_zone = data.aws_availability_zones.azs.names[count.index]
 
-  tags = { Name = "${local.name}-keycloak-subnet" }
+  tags = { Name = "${local.name}-keycloak-subnet-${count.index}" }
 }
 
 resource "aws_route_table" "keycloak" {
@@ -40,11 +40,13 @@ resource "aws_route" "keycloak_internet" {
 
 # Subnet application
 resource "aws_subnet" "application" {
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = "10.100.2.0/24"
-  availability_zone = data.aws_availability_zones.azs.names[0]
+  count = 2
 
-  tags = { Name = "${local.name}-application-subnet" }
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = "10.100.${count.index + 2}.0/24"
+  availability_zone = data.aws_availability_zones.azs.names[count.index]
+
+  tags = { Name = "${local.name}-application-subnet-${count.index}" }
 }
 
 resource "aws_route_table" "application" {
@@ -53,7 +55,9 @@ resource "aws_route_table" "application" {
 }
 
 resource "aws_route_table_association" "application" {
-  subnet_id      = aws_subnet.application.id
+  count = 2
+
+  subnet_id      = aws_subnet.application[count.index].id
   route_table_id = aws_route_table.application.id
 }
 

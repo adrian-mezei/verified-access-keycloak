@@ -1,6 +1,11 @@
-variable "keycloak_lsitener_certificate_arn" {
+variable "keycloak_listener_certificate_arn" {
   type = string
   description = "The ACM certificate ARN of the domain name for the ALB in front of Keycloak."
+}
+
+variable "application_listener_certificate_arn" {
+  type = string
+  description = "The ACM certificate ARN of the domain name for the ALB in front of the application."
 }
 
 variable "keycloak_username" {
