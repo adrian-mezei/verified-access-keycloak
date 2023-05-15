@@ -26,7 +26,7 @@ resource "aws_vpc_security_group_ingress_rule" "keycloak_alb" {
 resource "aws_vpc_security_group_egress_rule" "keycloak_alb" {
   security_group_id = aws_security_group.keycloak_alb.id
 
-  cidr_ipv4   = "${aws_instance.keycloak.private_ip}/32"
+  referenced_security_group_id = aws_security_group.keycloak_instance.id
   from_port   = 80
   ip_protocol = "tcp"
   to_port     = 80

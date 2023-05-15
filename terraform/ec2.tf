@@ -18,7 +18,7 @@ resource "aws_instance" "keycloak" {
     systemctl enable docker.service
     systemctl start docker.service
 
-    docker run --restart=always -p 80:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=${random_password.keycloak.result} -e KC_PROXY=passthrough -d quay.io/keycloak/keycloak:21.0.2 start-dev
+    docker run --restart=always -p 80:8080 -e KEYCLOAK_ADMIN=${var.keycloak_username} -e KEYCLOAK_ADMIN_PASSWORD=${random_password.keycloak.result} -e KC_PROXY=passthrough -d quay.io/keycloak/keycloak:21.0.2 start-dev
   EOL
 
   tags = { Name = "${local.name}-keycloak-instance" }
@@ -27,7 +27,7 @@ resource "aws_instance" "keycloak" {
 resource "aws_ssm_parameter" "keycloak_credentials" {
   name  = "${local.name}-keycloak-credentials"
   type  = "StringList"
-  value = "admin,${random_password.keycloak.result}"
+  value = "${var.keycloak_username},${random_password.keycloak.result}"
 }
 
 resource "random_password" "keycloak" {
