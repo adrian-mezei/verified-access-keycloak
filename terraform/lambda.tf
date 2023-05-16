@@ -31,15 +31,6 @@ resource "aws_security_group" "application_lambda" {
   vpc_id      = aws_vpc.this.id
 }
 
-resource "aws_vpc_security_group_ingress_rule" "application_lambda" {
-  security_group_id = aws_security_group.application_lambda.id
-
-  referenced_security_group_id = aws_security_group.application_alb.id
-  from_port   = 443
-  ip_protocol = "tcp"
-  to_port     = 443
-}
-
 # ALB invocation permission
 resource "aws_lambda_permission" "this" {
   action        = "lambda:InvokeFunction"

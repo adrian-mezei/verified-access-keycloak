@@ -14,8 +14,14 @@ variable "keycloak_username" {
   description = "The username of the Keycloak amin user."
 }
 
+variable "keycloak_domain" {
+  type = string
+  default = "keycloak.serverless-budapest.com"
+  description = "The FQDN where the integrated application will be accessible."
+}
+
 variable "application_domain" {
   type = string
-  default = "nginx.serverless-budapest.com"
+  default = "app.serverless-budapest.com"
   description = "The FQDN where the integrated application will be accessible."
 }

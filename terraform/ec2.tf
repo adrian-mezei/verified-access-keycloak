@@ -24,8 +24,8 @@ resource "aws_instance" "keycloak" {
   tags = { Name = "${local.name}-keycloak-instance" }
 }
 
-resource "aws_ssm_parameter" "keycloak_credentials" {
-  name  = "${local.name}-keycloak-credentials"
+resource "aws_ssm_parameter" "keycloak_admin_credentials" {
+  name  = "${local.name}-keycloak-admin-credentials"
   type  = "StringList"
   value = "${var.keycloak_username},${random_password.keycloak.result}"
 }

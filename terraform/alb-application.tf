@@ -23,15 +23,6 @@ resource "aws_vpc_security_group_ingress_rule" "application_alb" {
   to_port     = 443
 }
 
-resource "aws_vpc_security_group_egress_rule" "application_alb" {
-  security_group_id = aws_security_group.application_alb.id
-
-  referenced_security_group_id = aws_security_group.application_lambda.id
-  from_port   = 80
-  ip_protocol = "tcp"
-  to_port     = 80
-}
-
 # Target group, listener
 resource "aws_lb_listener" "application_alb" {
   load_balancer_arn = aws_lb.application_alb.arn

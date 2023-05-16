@@ -9,8 +9,8 @@ provider "keycloak" {
 resource "keycloak_openid_client" "this" {
   realm_id  = "master"
 
-  name      = "AWS Verified Access Nginx"
-  client_id = "aws-verified-access-nginx"
+  name      = "AWS Verified Access application"
+  client_id = "aws-verified-access-application"
 
   # Capability config
   access_type           = "CONFIDENTIAL"
