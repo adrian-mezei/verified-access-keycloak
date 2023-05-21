@@ -12,3 +12,6 @@ each application only when they meet the specified security requirements.
 
 - Run terraform apply from the terraform folder
 - Manually create a CNAME record for the FQDN with the DNS name of the Keycloak Loadbalancer
+- Configure Verified Access based on terraform output
+- Manually create a CNAME record for the FQDN with the DNS name of the Verified Access Endpoint
+

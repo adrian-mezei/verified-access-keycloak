@@ -21,7 +21,7 @@ resource "keycloak_openid_client" "this" {
   # Login settings
   root_url = "https://${var.application_domain}"
   base_url = "https://${var.application_domain}" // Home URL
-  valid_redirect_uris                        = ["/*"]
+  valid_redirect_uris                        = ["*"]
   web_origins                                = ["*", "/*"]
 
   # Other
@@ -38,6 +38,8 @@ resource "aws_ssm_parameter" "keycloak_client_id_client_secret" {
 resource "keycloak_user" "engineer_emma" {
   realm_id   = keycloak_openid_client.this.realm_id
   username   = "engineer_emma"
+  email = "engineer.emma@serverless-budapest.com"
+  email_verified = true
 
   first_name = "Engineer"
   last_name  = "Emma"
@@ -62,6 +64,8 @@ resource "aws_ssm_parameter" "keycloak_engineer_emma_credentials" {
 resource "keycloak_user" "manager_mario" {
   realm_id   = keycloak_openid_client.this.realm_id
   username   = "manager_mario"
+  email = "manager.mario@serverless-budapest.com"
+  email_verified = true
 
   first_name = "Manager"
   last_name  = "Mario"

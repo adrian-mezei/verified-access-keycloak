@@ -10,7 +10,7 @@ resource "aws_instance" "keycloak" {
   user_data_replace_on_change = true
   user_data                   = <<-EOL
     #!/bin/bash -xe
-    yum update
+    yum update -y
 
     yum install docker -y
     useradd ssm-user

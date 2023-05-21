@@ -17,7 +17,7 @@ resource "aws_security_group" "application_alb" {
 resource "aws_vpc_security_group_ingress_rule" "application_alb" {
   security_group_id = aws_security_group.application_alb.id
 
-  cidr_ipv4   = "0.0.0.0/0"
+  referenced_security_group_id = aws_security_group.va_endpoint.id
   from_port   = 443
   ip_protocol = "tcp"
   to_port     = 443
