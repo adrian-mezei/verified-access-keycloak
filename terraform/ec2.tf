@@ -21,6 +21,10 @@ resource "aws_instance" "keycloak" {
     docker run --restart=always -p 80:8080 -e KEYCLOAK_ADMIN=${var.keycloak_username} -e KEYCLOAK_ADMIN_PASSWORD=${random_password.keycloak.result} -e KC_PROXY=passthrough -d quay.io/keycloak/keycloak:21.0.2 start-dev
   EOL
 
+  lifecycle {
+    ignore_changes = [ami]
+  }
+
   tags = { Name = "${local.name}-keycloak-instance" }
 }
 
