@@ -4,15 +4,6 @@ resource "aws_security_group" "va_endpoint" {
   vpc_id      = aws_vpc.this.id
 }
 
-#resource "aws_vpc_security_group_ingress_rule" "va_endpoint" {
-#  security_group_id = aws_security_group.va_endpoint.id
-#
-#  cidr_ipv4   = "0.0.0.0/0"
-#  from_port   = 443
-#  ip_protocol = "tcp"
-#  to_port     = 443
-#}
-
 resource "aws_vpc_security_group_egress_rule" "va_endpoint" {
   security_group_id = aws_security_group.va_endpoint.id
 
@@ -20,4 +11,9 @@ resource "aws_vpc_security_group_egress_rule" "va_endpoint" {
   from_port   = 443
   ip_protocol = "tcp"
   to_port     = 443
+}
+
+# Cloud Watch LG for access logs
+resource "aws_cloudwatch_log_group" "va_access_logs" {
+  name = "/aws/va/${local.name}-access-logs-cw-lg"
 }
