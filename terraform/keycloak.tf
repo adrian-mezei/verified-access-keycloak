@@ -34,6 +34,37 @@ resource "aws_ssm_parameter" "keycloak_client_id_client_secret" {
   value = "${keycloak_openid_client.this.client_id},${keycloak_openid_client.this.client_secret}"
 }
 
+# Scope
+resource "keycloak_openid_client_scope" "this" {
+  realm_id               = keycloak_openid_client.this.realm_id
+  name                   = "groups"
+  description            = "When requested, this scope will map a user's group memberships to a claim"
+  include_in_token_scope = true
+  gui_order              = 1
+}
+
+resource "keycloak_openid_group_membership_protocol_mapper" "this" {
+  realm_id  = keycloak_openid_client.this.realm_id
+  client_scope_id = keycloak_openid_client_scope.this.id
+  name      = "group-membership-mapper"
+
+  claim_name = "groups"
+}
+
+resource "keycloak_openid_client_default_scopes" "this" {
+  realm_id  = keycloak_openid_client.this.realm_id
+  client_id = keycloak_openid_client.this.id
+
+  default_scopes = [
+    "acr",
+    "profile",
+    "email",
+    "roles",
+    "web-origins",
+    keycloak_openid_client_scope.this.name,
+  ]
+}
+
 # Test user 1
 resource "keycloak_user" "engineer_emma" {
   realm_id   = keycloak_openid_client.this.realm_id
@@ -84,4 +115,60 @@ resource "aws_ssm_parameter" "keycloak_manager_mario_credentials" {
   name  = "${local.name}-keycloak-manager-mario-credentials"
   type  = "StringList"
   value = "${keycloak_user.manager_mario.username},${random_password.keycloak_manager_mario.result}"
+}
+
+# Test user 3
+resource "keycloak_user" "not_verified_noah" {
+  realm_id   = keycloak_openid_client.this.realm_id
+  username   = "not_verified_noah"
+  email = "not.verified.noah@serverless-budapest.com"
+  email_verified = false
+
+  first_name = "Not Verified"
+  last_name  = "Noah"
+
+  initial_password {
+    value = random_password.keycloak_not_verified_noah.result
+  }
+}
+
+resource "random_password" "keycloak_not_verified_noah" {
+  length  = 30
+  special = false
+}
+
+resource "aws_ssm_parameter" "keycloak_not_verified_noah_credentials" {
+  name  = "${local.name}-keycloak-not-verified-noah-credentials"
+  type  = "StringList"
+  value = "${keycloak_user.not_verified_noah.username},${random_password.keycloak_not_verified_noah.result}"
+}
+
+# Groups
+resource "keycloak_group" "manager" {
+  realm_id = keycloak_openid_client.this.realm_id
+  name     = "manager"
+}
+
+resource "keycloak_group_memberships" "manager" {
+  realm_id = keycloak_openid_client.this.realm_id
+  group_id = keycloak_group.manager.id
+
+  members  = [
+    keycloak_user.manager_mario.username,
+    keycloak_user.not_verified_noah.username
+  ]
+}
+
+resource "keycloak_group" "engineer" {
+  realm_id = keycloak_openid_client.this.realm_id
+  name     = "engineer"
+}
+
+resource "keycloak_group_memberships" "engineer" {
+  realm_id = keycloak_openid_client.this.realm_id
+  group_id = keycloak_group.engineer.id
+
+  members  = [
+    keycloak_user.engineer_emma.username
+  ]
 }

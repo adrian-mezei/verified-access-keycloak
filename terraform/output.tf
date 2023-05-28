@@ -16,11 +16,23 @@ output "keycloak_users" {
       username = keycloak_user.manager_mario.username
       password = "<Get from SSM parameter: ${aws_ssm_parameter.keycloak_manager_mario_credentials.name}>"
     }
+    not_verified_noah = {
+      username = keycloak_user.not_verified_noah.username
+      password = "<Get from SSM parameter: ${aws_ssm_parameter.keycloak_not_verified_noah_credentials.name}>"
+    }
   }
 }
 
 output "verified_access_configuration" {
   value = {
+    group = {
+      policy = <<-EOT
+        permit(principal,action,resource)
+        when {
+            context.keycloak.email_verified == true
+        };
+      EOT
+    }
     trust_provider = {
       trust_provider_information = {
         policy_reference_name    = "keycloak"
@@ -53,7 +65,7 @@ output "verified_access_configuration" {
       policy = <<-EOT
         permit(principal,action,resource)
         when {
-            context.keycloak.email == "${keycloak_user.manager_mario.email}"
+            context.keycloak.groups.contains("/manager")
         };
       EOT
     }
