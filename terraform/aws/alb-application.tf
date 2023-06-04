@@ -5,7 +5,7 @@ resource "aws_lb" "application_alb" {
   security_groups    = [aws_security_group.application_alb.id]
   subnets            = aws_subnet.application[*].id
 
-  tags = { Name = "${local.name}-application-subnet" }
+  tags = { Name = "${local.name}-application-alb" }
 }
 
 # Security group

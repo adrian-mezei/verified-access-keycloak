@@ -1,9 +1,9 @@
-provider "keycloak" {
-  client_id                = "admin-cli"
-  username                 = var.keycloak_username
-  password                 = random_password.keycloak.result
-  url                      = "https://${aws_lb.keycloak_alb.dns_name}"
-  tls_insecure_skip_verify = true
+locals {
+  name = "va"
+}
+
+data "aws_ssm_parameter" "keycloak_admin_credentials" {
+  name = var.keycloak_admin_credentials_ssm_parameter_name
 }
 
 resource "keycloak_openid_client" "this" {
@@ -22,7 +22,7 @@ resource "keycloak_openid_client" "this" {
   root_url = "https://${var.application_domain}"
   base_url = "https://${var.application_domain}" // Home URL
   valid_redirect_uris                        = ["*"]
-  web_origins                                = ["*", "/*"]
+  web_origins                                = ["*"]
 
   # Other
   extra_config = {}

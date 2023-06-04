@@ -4,7 +4,7 @@ locals {
 
 data "archive_file" "this" {
   type        = "zip"
-  source_dir  = "${path.module}/../backend/bundle"
+  source_dir  = "${path.module}/../../backend/bundle"
   output_path = "${path.module}/lambda.zip"
 }
 

@@ -5,7 +5,7 @@ resource "aws_lb" "keycloak_alb" {
   security_groups    = [aws_security_group.keycloak_alb.id]
   subnets            = aws_subnet.keycloak[*].id
 
-  tags = { Name = "${local.name}-application-subnet" }
+  tags = { Name = "${local.name}-application-alb" }
 }
 
 # Security group
